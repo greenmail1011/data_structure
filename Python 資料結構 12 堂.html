@@ -1,0 +1,246 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Python 資料結構 12 堂</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: one narrow reading column; three phase bands; one card per lesson; problems as tappable rows */
+:root {
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --fg: #172130;
+  --muted: #5b6878;
+  --line: #dde3ea;
+  --accent: #2c5f8f;
+  --accent-soft: #e4edf6;
+  --marker: #b7841c;
+  --marker-soft: #f6ecd6;
+  --font-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+:root { color-scheme: light; }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.wrap {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 1.75rem 3rem;
+  display: grid;
+  gap: 1.75rem;
+}
+
+header { display: grid; gap: .5rem; }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  letter-spacing: .08em;
+  color: var(--muted);
+}
+h1 {
+  font-size: clamp(1.6rem, 6vw, 2.1rem);
+  font-weight: 900;
+  line-height: 1.2;
+  margin: 0;
+  text-wrap: balance;
+}
+.lede { margin: 0; color: var(--muted); font-size: .95rem; }
+
+.jump {
+  display: flex;
+  gap: .4rem;
+  overflow-x: auto;
+  padding-bottom: .25rem;
+  scrollbar-width: thin;
+}
+.jump a {
+  flex: 0 0 auto;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: .5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--fg);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: .9rem;
+  font-variant-numeric: tabular-nums;
+}
+.jump a:focus-visible, .probs a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.phase { display: grid; gap: .9rem; }
+.phase-head { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
+.phase-head h2 { margin: 0; font-size: 1.1rem; font-weight: 700; }
+.phase-head span { font-family: var(--font-mono); font-size: .8rem; color: var(--marker); font-weight: 700; }
+
+.lesson {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: .75rem;
+  padding: 1rem;
+  display: grid;
+  gap: .75rem;
+  scroll-margin-top: 1rem;
+}
+.lesson-top { display: flex; gap: .8rem; align-items: flex-start; }
+.num {
+  flex: 0 0 auto;
+  width: 2.4rem; height: 2.4rem;
+  border-radius: .5rem;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: grid; place-items: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.lesson h3 { margin: 0; font-size: 1.1rem; line-height: 1.35; font-weight: 700; text-wrap: balance; }
+.concepts { margin: .15rem 0 0; color: var(--muted); font-size: .9rem; }
+
+dl.meta { margin: 0; display: grid; gap: .45rem; font-size: .9rem; }
+dl.meta div { display: grid; grid-template-columns: 4.5rem 1fr; gap: .5rem; }
+dl.meta dt { color: var(--muted); font-size: .8rem; letter-spacing: .04em; padding-top: .1rem; }
+dl.meta dd { margin: 0; min-width: 0; }
+code {
+  font-family: var(--font-mono);
+  font-size: .82rem;
+  background: var(--marker-soft);
+  color: var(--fg);
+  padding: .05rem .35rem;
+  border-radius: .3rem;
+  white-space: nowrap;
+}
+.tools { display: flex; flex-wrap: wrap; gap: .35rem; }
+
+.probs { display: grid; gap: .4rem; }
+.probs-label { font-size: .8rem; color: var(--muted); letter-spacing: .04em; }
+.probs a {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  min-height: 2.75rem;
+  padding: .5rem .75rem;
+  border-radius: .55rem;
+  border: 1px solid var(--line);
+  color: var(--fg);
+  text-decoration: none;
+  background: var(--bg);
+}
+.probs a:active { background: var(--accent-soft); }
+@media (hover: hover) { .probs a:hover { border-color: var(--accent); } }
+.pid {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--accent);
+  font-size: .9rem;
+  min-width: 2.8rem;
+}
+.pname { flex: 1; min-width: 0; font-size: .93rem; }
+.arrow { color: var(--muted); font-size: .85rem; }
+
+footer { color: var(--muted); font-size: .8rem; text-align: center; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">PYTHON · DATA STRUCTURES · 12 LESSONS</div>
+    <h1>Python 資料結構｜12 堂課程總表</h1>
+    <p class="lede">每堂課的主題、核心概念、使用的 Python 工具與練習方向。</p>
+  </header>
+
+  <nav class="jump" aria-label="跳到第幾堂" id="jump"></nav>
+
+  <main id="main" style="display:grid;gap:1.75rem"></main>
+
+</div>
+
+<script>
+const phases = [
+  { name: "打底", range: "第 1–2 堂", ids: [1, 2] },
+  { name: "線性結構與雜湊", range: "第 3–6 堂", ids: [3, 4, 5, 6] },
+  { name: "非線性結構", range: "第 7–12 堂", ids: [7, 8, 9, 10, 11, 12] }
+];
+
+const lessons = {
+  1: { t: "複雜度與前綴和", c: "Big-O、用複雜度重看 list 各操作、前綴和、差分", tools: ["time", "list"], p: "同一題比較 O(n²) 與前綴和 O(n) 解法",
+       z: [["e346", "區間和練習"], ["d206", "00108 - Maximum Sum"]] },
+  2: { t: "排序與 tuple", c: "內建排序、多鍵排序、穩定排序", tools: ["sort(key=函式)", "tuple"], p: "成績排名、多條件排序",
+       z: [["a915", "二維點排序"], ["e529", "Permutation Arrays"]] },
+  3: { t: "堆疊 Stack", c: "後進先出、括號匹配、後序運算式", tools: ["list.append", "list.pop"], p: "括號配對、運算式求值",
+       z: [["b923", "stack 堆疊的模板題"], ["b838", "括號問題"], ["c123", "Rails"]] },
+  4: { t: "佇列 Queue", c: "先進先出、環狀佇列、模擬", tools: ["collections.deque"], p: "排隊模擬、約瑟夫問題",
+       z: [["e447", "queue 練習"], ["e155", "Throwing cards away I"], ["e564", "Team Queue"]] },
+  5: { t: "字典 dict（雜湊表）", c: "雜湊概念、O(1) 查找、計數", tools: ["dict", "get"], p: "字頻統計、兩數之和",
+       z: [["a743", "List of Conquests"], ["a135", "Language Detection"], ["d492", "Hardwood species"]] },
+  6: { t: "集合 set", c: "去重、交集聯集差集、成員判斷", tools: ["set"], p: "不重複元素、共同元素",
+       z: [["d442", "Happy Number"], ["e313", "最少相異字母"], ["d123", "B2-Sequence"]] },
+  7: { t: "鏈結串列 Linked List", c: "節點、指標、插入刪除", tools: ["class"], p: "自刻串列、反轉串列",
+       z: [["c296", "定時K彈"], ["b938", "kevin 愛殺殺"]] },
+  8: { t: "遞迴與二元樹", c: "遞迴三要素、樹的術語、前中後序走訪", tools: ["class Node", "遞迴"], p: "樹的高度、節點數",
+       z: [["e357", "遞迴函數練習"], ["c463", "樹狀圖分析"], ["b967", "血緣關係"]] },
+  9: { t: "二分搜尋與二元搜尋樹", c: "二分法、BST 插入與搜尋", tools: ["bisect"], p: "找位置、找最接近值",
+       z: [["d732", "二分搜尋法"], ["f581", "圓環出口"], ["c575", "基地台"]] },
+  10: { t: "堆積 Heap 與優先佇列", c: "最小堆積、Top-K", tools: ["heapq"], p: "前 K 大、合併有序序列",
+       z: [["d221", "Add All"]] },
+  11: { t: "圖 Graph", c: "鄰接串列、BFS、DFS", tools: ["deque", "list 存圖"], p: "迷宮最短路、連通區塊",
+       z: [["a982", "迷宮問題#1"], ["a597", "祖靈被榨乾了"], ["c291", "小群體"]] },
+  12: { t: "並查集 Union-Find + 期末綜合", c: "集合合併、找代表元素、路徑壓縮", tools: ["list 存 parent", "find 函式"], p: "朋友圈、分組問題",
+       z: [["f677", "並查集練習"], ["a445", "新手訓練系列- 我的朋友很少"], ["d831", "畢業旅行"]] }
+};
+
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, function (ch) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch];
+  });
+}
+
+const jump = document.getElementById("jump");
+const main = document.getElementById("main");
+
+phases.forEach(function (ph) {
+  const sec = document.createElement("section");
+  sec.className = "phase";
+  let html = '<div class="phase-head"><h2>' + esc(ph.name) + '</h2><span>' + esc(ph.range) + '</span></div>';
+  ph.ids.forEach(function (n) {
+    const L = lessons[n];
+    const tools = L.tools.map(function (t) { return "<code>" + esc(t) + "</code>"; }).join("");
+    const probs = L.z.map(function (pz) {
+      const url = "https://zerojudge.tw/ShowProblem?problemid=" + pz[0];
+      return '<a href="' + url + '" target="_blank" rel="noopener"><span class="pid">' + esc(pz[0]) +
+        '</span><span class="pname">' + esc(pz[1]) + '</span><span class="arrow" aria-hidden="true">↗</span></a>';
+    }).join("");
+    html += '<article class="lesson" id="L' + n + '">' +
+      '<div class="lesson-top"><div class="num">' + n + '</div><div><h3>' + esc(L.t) + '</h3>' +
+      '<p class="concepts">' + esc(L.c) + '</p></div></div>' +
+      '<dl class="meta"><div><dt>Python 工具</dt><dd class="tools">' + tools + '</dd></div>' +
+      '<div><dt>練習方向</dt><dd>' + esc(L.p) + '</dd></div></dl>' +
+      '</article>';
+    const j = document.createElement("a");
+    j.href = "#L" + n;
+    j.textContent = n;
+    j.setAttribute("aria-label", "第 " + n + " 堂");
+    jump.appendChild(j);
+  });
+  sec.innerHTML = html;
+  main.appendChild(sec);
+});
+
+const target = location.hash ? document.getElementById(location.hash.slice(1)) : null;
+if (target) { target.scrollIntoView(); }
+</script>
+
+</body></html>
